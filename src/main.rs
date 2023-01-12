@@ -18,7 +18,7 @@ fn main() {
 
     let program = parse(tokens).expect("Parsing failed");
 
-    let final_registers = run(program, initial_registers);
+    let final_registers = run(program, initial_registers).expect("Runtime error");
 
     for (reg, val) in final_registers {
         println!("{reg}: {}", val.iter().collect::<String>());

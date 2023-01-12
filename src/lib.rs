@@ -24,7 +24,8 @@ pub fn run_program(program: &str, initial_registers: JsValue) -> Result<String, 
 
     let program = parse(tokens).map_err(|err| format!("Parsing error: {err}"))?;
 
-    let final_registers = run(program, initial_registers.0);
+    let final_registers =
+        run(program, initial_registers.0).map_err(|err| format!("Runtime error: {err}"))?;
 
     let mut out = String::new();
     for (reg, val) in final_registers {

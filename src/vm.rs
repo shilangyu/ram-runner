@@ -170,7 +170,7 @@ pub fn parse(tokens: Vec<Token>) -> Result<Vec<Line>, String> {
 pub fn run(
     program: Vec<Line>,
     initial_registers: HashMap<String, String>,
-) -> HashMap<String, VecDeque<char>> {
+) -> Result<HashMap<String, VecDeque<char>>, String> {
     let mut registers = initial_registers
         .into_iter()
         .map(|(reg, val)| (reg, val.chars().collect::<VecDeque<_>>()))
@@ -196,9 +196,9 @@ pub fn run(
             Instruction::Del(reg) => {
                 registers
                     .get_mut(reg)
-                    .expect("Called del on an empty register")
+                    .ok_or_else(|| format!("del instruction used on the empty register {reg}"))?
                     .pop_front()
-                    .expect("Called del on an empty register");
+                    .ok_or_else(|| format!("del instruction used on the empty register {reg}"))?;
             }
             Instruction::Add(reg, c) => {
                 if !registers.contains_key(reg) {
@@ -215,7 +215,7 @@ pub fn run(
             Instruction::Jmp(label) => {
                 ip = *jump_table
                     .get(label)
-                    .expect("jmp instruction to unknown label {label}");
+                    .ok_or_else(|| format!("jmp to unknown label {label}"))?;
                 continue;
             }
             Instruction::CondJmp(reg, c, label) => {
@@ -224,7 +224,7 @@ pub fn run(
                 if matches!(first, Some(first) if first == c) {
                     ip = *jump_table
                         .get(label)
-                        .expect("jmp instruction to unknown label {label}");
+                        .ok_or_else(|| format!("jmp to unknown label {label}"))?;
                     continue;
                 }
             }
@@ -234,5 +234,5 @@ pub fn run(
         ip += 1;
     }
 
-    registers
+    Ok(registers)
 }
