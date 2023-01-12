@@ -30,6 +30,7 @@ jobs:
       - name: Build wasm
         run: |
           wasm-pack build --out-dir public/out --release --target web
+          rm public/out/{.gitignore,package.json,README.md}
 
       - name: Deploy demo to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
