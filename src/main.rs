@@ -14,7 +14,7 @@ fn main() {
         })
         .collect();
 
-    let tokens = lex(read_to_string(file).unwrap());
+    let tokens = lex(&read_to_string(file).unwrap());
 
     let program = parse(tokens);
 

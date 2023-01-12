@@ -30,7 +30,7 @@ pub enum Token {
     Continue,
 }
 
-pub fn lex(content: String) -> Vec<Token> {
+pub fn lex(content: &str) -> Vec<Token> {
     content
         .split_whitespace()
         .map(|e| match e {
