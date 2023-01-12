@@ -189,7 +189,7 @@ pub fn run(
     let mut ip = 0;
 
     loop {
-        match &program[ip] {
+        match &program.get(ip).ok_or_else(|| "Instruction pointer reached past the program. Are you missing a `continue` instruction?".to_string())? {
             Instruction::Clr(reg) => {
                 registers.remove(reg);
             }
