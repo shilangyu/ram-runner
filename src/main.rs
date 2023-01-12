@@ -21,6 +21,8 @@ fn main() {
     let final_registers = run(program, initial_registers).expect("Runtime error");
 
     for (reg, val) in final_registers {
-        println!("{reg}: {}", val.iter().collect::<String>());
+        if !val.is_empty() {
+            println!("{reg}: {}", val.iter().collect::<String>());
+        }
     }
 }

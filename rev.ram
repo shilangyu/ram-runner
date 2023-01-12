@@ -1,4 +1,4 @@
-N0: clr RY 
+N0: clr RY
     clr RZ
 
 N1: RX jmp0 N2
