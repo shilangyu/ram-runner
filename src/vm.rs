@@ -13,8 +13,8 @@ pub enum Instruction {
 
 #[derive(Debug)]
 pub struct Line {
-    label: Option<String>,
-    instruction: Instruction,
+    pub label: Option<String>,
+    pub instruction: Instruction,
 }
 
 #[derive(Debug)]

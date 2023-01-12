@@ -13,7 +13,7 @@
   </head>
   <body>
     <script type="module" defer>
-      import init, { run_program } from "./out/ram_machine.js";
+      import init, { run_program, format } from "./out/ram_machine.js";
 
       const debounce = (callback, wait) => {
         let timeoutId = null;
@@ -29,6 +29,7 @@
 
       const code = document.querySelector("#code");
       const out = document.querySelector("#out");
+      const formatBtn = document.querySelector("#format-btn");
 
       const onChange = () => {
         try {
@@ -40,9 +41,19 @@
         }
       };
 
+      const onFormat = () => {
+        try {
+          code.value = format(code.value);
+        } catch (err) {
+          out.innerText = err;
+        }
+      };
+
       code.addEventListener("input", debounce(onChange, 1000));
+      formatBtn.addEventListener("click", onFormat);
 
       onChange();
+      onFormat();
     </script>
 
     <textarea id="code" width="100%">
@@ -81,5 +92,6 @@ NEND: RX <- RZ
       continue
     </textarea>
     <div id="out"></div>
+    <button id="format-btn">format code</button>
   </body>
 </html>

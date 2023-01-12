@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use wasm_bindgen::prelude::*;
 
+mod format;
 mod vm;
 use vm::*;
 
@@ -32,4 +33,12 @@ pub fn run_program(program: &str, initial_registers: JsValue) -> Result<String, 
         out.push_str(&format!("{reg}: {}", val.iter().collect::<String>()));
     }
     Ok(out)
+}
+
+#[wasm_bindgen]
+pub fn format(program: &str) -> Result<String, String> {
+    let tokens = lex(program);
+    let program = parse(tokens).map_err(|err| format!("Parsing error: {err}"))?;
+
+    Ok(format::format(program))
 }
