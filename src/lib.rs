@@ -28,9 +28,14 @@ pub fn run_program(program: &str, initial_registers: JsValue) -> Result<String, 
     let final_registers =
         run(program, initial_registers.0).map_err(|err| format!("Runtime error: {err}"))?;
 
+    let mut final_registers = final_registers.into_iter().collect::<Vec<_>>();
+    final_registers.sort_by(|a, b| a.0.cmp(&b.0));
+
     let mut out = String::new();
     for (reg, val) in final_registers {
-        out.push_str(&format!("{reg}: {}", val.iter().collect::<String>()));
+        if !val.is_empty() {
+            out.push_str(&format!("{reg}: {}\n", val.iter().collect::<String>()));
+        }
     }
     Ok(out)
 }

@@ -3,95 +3,72 @@
   <head>
     <meta charset="utf-8" />
     <title>RAM machine</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Inter"
+    />
     <style>
-      #code {
-        box-sizing: border-box;
-        width: 50%;
+      :root {
+        font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        height: 90vh;
+        padding: 20px;
+      }
+
+      #error-msg {
+        color: red;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .full-height {
         height: 100%;
+      }
+
+      .container > * {
+        flex: 1;
+        margin: 4px;
       }
     </style>
   </head>
   <body>
-    <script type="module" defer>
-      import init, { run_program, format } from "./out/ram_machine.js";
+    <script type="module" src="./index.js" defer></script>
 
-      const debounce = (callback, wait) => {
-        let timeoutId = null;
-        return (...args) => {
-          window.clearTimeout(timeoutId);
-          timeoutId = window.setTimeout(() => {
-            callback.apply(null, args);
-          }, wait);
-        };
-      };
+    <div class="container full-height">
+      <textarea id="code" width="100%"></textarea>
 
-      await init();
-
-      const code = document.querySelector("#code");
-      const out = document.querySelector("#out");
-      const formatBtn = document.querySelector("#format-btn");
-
-      const onChange = () => {
-        try {
-          const res = run_program(code.value, { RX: "10111" });
-
-          out.innerText = res;
-        } catch (err) {
-          out.innerText = err;
-        }
-      };
-
-      const onFormat = () => {
-        try {
-          code.value = format(code.value);
-        } catch (err) {
-          out.innerText = err;
-        }
-      };
-
-      code.addEventListener("input", debounce(onChange, 1000));
-      formatBtn.addEventListener("click", onFormat);
-
-      onChange();
-      onFormat();
-    </script>
-
-    <textarea id="code" width="100%">
-N0: clr RY 
-    clr RZ
-
-N1: RX jmp0 N2
-    RX jmp1 N3
-    jmp NEND
-	
-N2: add0 RY
-    del RX
-    jmp N4
-
-N3: add1 RY
-    del RX
-    jmp N4
-
-N4: RZ jmp0 N5
-    RZ jmp1 N6
-    RZ <- RY
-    clr RY
-    jmp N1
-
-N5: del RZ
-    add0 RY
-    jmp N4
-
-N6: del RZ
-    add1 RY
-    jmp N4
-
-NEND: RX <- RZ
-      clr RY
-      clr RZ
-      continue
-    </textarea>
-    <div id="out"></div>
-    <button id="format-btn">format code</button>
+      <div>
+        <fieldset>
+          <legend>Input</legend>
+          <table>
+            <thead>
+              <tr>
+                <th>Register name</th>
+                <th>Initial value</th>
+              </tr>
+            </thead>
+            <tbody id="registers"></tbody>
+          </table>
+        </fieldset>
+        <fieldset>
+          <legend>Output</legend>
+          <div id="out"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Errors</legend>
+          <div id="error-msg"></div>
+        </fieldset>
+        <div class="container">
+          <button id="add-reg-btn">add input register</button>
+          <button id="run-btn">run program</button>
+          <button id="format-btn">format code</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
