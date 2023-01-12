@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Random-access machine</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Inter"
+    />
+    <style>
+      :root {
+        font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        height: 92vh;
+        padding: 20px;
+      }
+
+      button {
+        height: 24px;
+      }
+
+      #error-msg {
+        color: red;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .full-height {
+        height: 100%;
+      }
+
+      .container > * {
+        flex: 1;
+        margin: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./index.js" defer></script>
+
+    <div class="container full-height">
+      <textarea id="code" width="100%"></textarea>
+
+      <div>
+        <fieldset>
+          <legend>Input</legend>
+          <table>
+            <thead>
+              <tr>
+                <th>Register name</th>
+                <th>Initial value</th>
+              </tr>
+            </thead>
+            <tbody id="registers"></tbody>
+          </table>
+        </fieldset>
+        <fieldset>
+          <legend>Output</legend>
+          <div id="out"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Errors</legend>
+          <div id="error-msg"></div>
+        </fieldset>
+        <div class="container">
+          <button id="add-reg-btn">add input register</button>
+          <button id="run-btn">run program</button>
+          <button id="format-btn">format code</button>
+        </div>
+        <fieldset>
+          <legend>About</legend>
+          <p>
+            Write code in the textarea (all whitespace is ignored). Add new
+            input registers, run the program, and format the code (beautify)
+            with buttons above.
+          </p>
+          <p>
+            Output registers (if not empty) are printed in the
+            <em>"Output"</em> section after running the program.
+          </p>
+          <p>
+            Errors are printed in the <em>"Errors"</em> section after
+            running/formatting the program. Errors include parsing errors
+            (incorrect syntax) and runtime errors (for example jumping to a
+            non-existing label).
+          </p>
+          <p>Seven instructions are supported:</p>
+          <ol>
+            <li>
+              <code>addj RX</code> - adds <code>j</code> to the right end of the
+              string in <code>RX</code>
+            </li>
+            <li>
+              <code>del RX</code> - deletes the first from left symbol of the
+              string stored in <code>RX</code>
+            </li>
+            <li><code>clr RX</code> - clears the string in <code>RX</code></li>
+            <li>
+              <code>RX <- RY</code> - copies the string in <code>RY</code> into
+              <code>RX</code>
+            </li>
+            <li>
+              <code>jmp N1</code> - jumps to the instruction with line label
+              <code>N1</code>
+            </li>
+            <li>
+              <code>RX jmpj N1</code> - jumps to the instruction with line label
+              <code>N1</code> if the first symbol of the string in
+              <code>RX</code> is <code>j</code>
+            </li>
+            <li><code>continue</code> - ends execution</li>
+          </ol>
+          <p>
+            Each instruction can be prefixed with a line label, for example
+            <code>N1: add0 RX</code>
+          </p>
+        </fieldset>
+      </div>
+    </div>
+  </body>
+</html>
