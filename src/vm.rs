@@ -54,36 +54,46 @@ pub fn lex(content: &str) -> Vec<Token> {
         .collect()
 }
 
-pub fn parse(tokens: Vec<Token>) -> Vec<Line> {
-    fn line(tokens: &mut impl Iterator<Item = Token>) -> Option<Line> {
-        let first = tokens.next()?;
+pub fn parse(tokens: Vec<Token>) -> Result<Vec<Line>, String> {
+    fn line(tokens: &mut impl Iterator<Item = Token>) -> Result<Line, String> {
+        let first = tokens
+            .next()
+            .ok_or_else(|| "Missing starting token".to_string())?;
 
         let (label, first) = match first {
-            Token::Label(l) => (Some(l), tokens.next().unwrap()),
+            Token::Label(l) => (
+                Some(l),
+                tokens
+                    .next()
+                    .ok_or_else(|| "Line label is missing an instruction".to_string())?,
+            ),
             first => (None, first),
         };
 
         match first {
-            Token::Copy | Token::CondJmp(_) | Token::Label(_) => {
-                panic!("Unexpected token {first:?}")
+            tok @ (Token::Copy | Token::CondJmp(_) | Token::Label(_)) => {
+                Err(format!("Unexpected token {tok:?}"))
             }
-            Token::Ident(ident) => match tokens.next().unwrap() {
+            Token::Ident(ident) => match tokens
+                .next()
+                .ok_or_else(|| "Expected more tokens after an identifier".to_string())?
+            {
                 Token::CondJmp(c) => {
                     let Some(Token::Ident(target)) = tokens.next() else {
-											panic!("Conditional jump requires a label");
-									};
+                        return Err("Conditional jump requires a line label".to_string());
+                    };
 
-                    Some(Line {
+                    Ok(Line {
                         label,
                         instruction: Instruction::CondJmp(ident, c, target),
                     })
                 }
                 Token::Copy => {
                     let Some(Token::Ident(reg)) = tokens.next() else {
-											panic!("Copying requires a register");
-									};
+                        return Err("Copying requires a register".to_string());
+                    };
 
-                    Some(Line {
+                    Ok(Line {
                         label,
                         instruction: Instruction::Copy(ident, reg),
                     })
@@ -94,71 +104,67 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Line> {
                 | Token::Jmp
                 | Token::Clr
                 | Token::Del
-                | Token::Continue) => {
-                    panic!("Unexpected token {tok:?}")
-                }
+                | Token::Continue) => return Err(format!("Unexpected token {tok:?}")),
             },
             Token::Clr => {
                 let Some(Token::Ident(reg)) = tokens.next() else {
-									panic!("Clearing requires a register");
-							};
+                    return Err("Clearing requires a register".to_string());
+                };
 
-                Some(Line {
+                Ok(Line {
                     label,
                     instruction: Instruction::Clr(reg),
                 })
             }
             Token::Del => {
                 let Some(Token::Ident(reg)) = tokens.next() else {
-									panic!("Deleting requires a register");
-							};
+                    return Err("Deleting requires a register".to_string());
+                };
 
-                Some(Line {
+                Ok(Line {
                     label,
                     instruction: Instruction::Del(reg),
                 })
             }
             Token::Add(c) => {
                 let Some(Token::Ident(reg)) = tokens.next() else {
-									panic!("Adding requires a register");
-							};
+                    return Err("Adding requires a register".to_string());
+                };
 
-                Some(Line {
+                Ok(Line {
                     label,
                     instruction: Instruction::Add(reg, c),
                 })
             }
             Token::Jmp => {
                 let Some(Token::Ident(reg)) = tokens.next() else {
-									panic!("Jumping requires a register");
-							};
+                    return Err("Jumping requires a register".to_string());
+                };
 
-                Some(Line {
+                Ok(Line {
                     label,
                     instruction: Instruction::Jmp(reg),
                 })
             }
-            Token::Continue => Some(Line {
+            Token::Continue => Ok(Line {
                 label,
                 instruction: Instruction::Continue,
             }),
         }
     }
 
-    let mut iter = tokens.into_iter();
+    let mut iter = tokens.into_iter().peekable();
 
     let mut res = vec![];
     loop {
-        let line = line(&mut iter);
-
-        if let Some(line) = line {
-            res.push(line);
-        } else {
+        if iter.peek().is_none() {
             break;
         }
+
+        res.push(line(&mut iter)?);
     }
 
-    res
+    Ok(res)
 }
 
 pub fn run(

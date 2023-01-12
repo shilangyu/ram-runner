@@ -31,9 +31,13 @@
       const out = document.querySelector("#out");
 
       const onChange = () => {
-        const res = run_program(code.value, { RX: "10111" });
+        try {
+          const res = run_program(code.value, { RX: "10111" });
 
-        out.innerText = res;
+          out.innerText = res;
+        } catch (err) {
+          out.innerText = err;
+        }
       };
 
       code.addEventListener("input", debounce(onChange, 1000));

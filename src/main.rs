@@ -16,7 +16,7 @@ fn main() {
 
     let tokens = lex(&read_to_string(file).unwrap());
 
-    let program = parse(tokens);
+    let program = parse(tokens).expect("Parsing failed");
 
     let final_registers = run(program, initial_registers);
 

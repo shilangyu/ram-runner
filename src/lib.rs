@@ -17,12 +17,12 @@ use serde::{Deserialize, Serialize};
 pub struct Registers(HashMap<String, String>);
 
 #[wasm_bindgen]
-pub fn run_program(program: &str, initial_registers: JsValue) -> String {
+pub fn run_program(program: &str, initial_registers: JsValue) -> Result<String, String> {
     let initial_registers: Registers = serde_wasm_bindgen::from_value(initial_registers).unwrap();
 
     let tokens = lex(program);
 
-    let program = parse(tokens);
+    let program = parse(tokens).map_err(|err| format!("Parsing error: {err}"))?;
 
     let final_registers = run(program, initial_registers.0);
 
@@ -30,5 +30,5 @@ pub fn run_program(program: &str, initial_registers: JsValue) -> String {
     for (reg, val) in final_registers {
         out.push_str(&format!("{reg}: {}", val.iter().collect::<String>()));
     }
-    out
+    Ok(out)
 }
