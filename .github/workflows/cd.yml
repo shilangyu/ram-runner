@@ -1,0 +1,38 @@
+name: cd
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install stable rust
+        run: |
+          rustup install stable
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Print versions
+        run: |
+          cargo --version
+          rustc --version
+          wasm-pack --version
+
+      - name: Build wasm
+        run: |
+          wasm-pack build --out-dir public/out --release --target web
+
+      - name: Deploy demo to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          BRANCH: gh-pages
+          FOLDER: public
