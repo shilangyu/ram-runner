@@ -57,7 +57,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ram_machine"
+name = "ram"
 version = "0.1.0"
 dependencies = [
  "serde",

@@ -1,4 +1,4 @@
-import init, { format, run_program } from "./out/ram_machine.js";
+import init, { format, run_program } from "./out/ram.js";
 
 await init();
 
