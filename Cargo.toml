@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 [dependencies]
 serde = { version = "1.0.152", features = ["derive"] }
 serde-wasm-bindgen = "0.4.5"
-wasm-bindgen = "0.2.83"
+wasm-bindgen = "0.2.84"
