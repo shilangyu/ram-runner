@@ -104,7 +104,7 @@ pub fn parse(tokens: Vec<Token>) -> Result<Vec<Line>, String> {
                 | Token::Jmp
                 | Token::Clr
                 | Token::Del
-                | Token::Continue) => return Err(format!("Unexpected token {tok:?}")),
+                | Token::Continue) => Err(format!("Unexpected token {tok:?}")),
             },
             Token::Clr => {
                 let Some(Token::Ident(reg)) = tokens.next() else {
