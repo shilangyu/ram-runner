@@ -376,7 +376,7 @@ function __wbg_get_imports() {
         let result;
         try {
             result = getObject(arg0) instanceof ArrayBuffer;
-        } catch {
+        } catch (_) {
             result = false;
         }
         const ret = result;
@@ -405,7 +405,7 @@ function __wbg_get_imports() {
         let result;
         try {
             result = getObject(arg0) instanceof Uint8Array;
-        } catch {
+        } catch (_) {
             result = false;
         }
         const ret = result;
