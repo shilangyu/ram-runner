@@ -219,7 +219,7 @@ pub fn run(
                 continue;
             }
             Instruction::CondJmp(reg, c, label) => {
-                let first = registers.get(reg).and_then(|e| e.get(0));
+                let first = registers.get(reg).and_then(VecDeque::front);
 
                 if matches!(first, Some(first) if first == c) {
                     ip = *jump_table
