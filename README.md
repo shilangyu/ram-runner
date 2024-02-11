@@ -10,7 +10,7 @@ A simple Rust [RAM](https://en.wikipedia.org/wiki/Random-access_machine) program
 
 ## Web
 
-Compiled to WASM to run in the browser. Features a simple textarea for code and UI for interacting with the program executor. Live at [https://shilangyu.dev/ram-runner](https://shilangyu.dev/ram-runner).
+Compiled to WASM to run in the browser. Features a simple textarea for code and UI for interacting with the program executor. Live at [https://github.shilangyu.dev/ram-runner](https://github.shilangyu.dev/ram-runner).
 
 ![A RAM program reversing the string in register RX](showcase.png)
 
