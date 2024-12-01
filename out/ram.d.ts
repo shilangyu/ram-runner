@@ -1,30 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
-/**
- * @param {string} program
- * @param {any} initial_registers
- * @returns {string}
- */
 export function run_program(program: string, initial_registers: any): string;
-/**
- * @param {string} program
- * @returns {string}
- */
 export function format(program: string): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly run_program: (a: number, b: number, c: number) => Array;
-  readonly format: (a: number, b: number) => Array;
-  readonly __wbindgen_malloc: (a: number, b: number) => number;
-  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
-  readonly __wbindgen_export_2: WebAssembly.Table;
-  readonly __externref_table_dealloc: (a: number) => void;
-  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
+  readonly run_program: (a: number, b: number, c: any) => [number, number, number, number];
+  readonly format: (a: number, b: number) => [number, number, number, number];
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __externref_table_alloc: () => number;
+  readonly __wbindgen_export_2: WebAssembly.Table;
+  readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+  readonly __externref_table_dealloc: (a: number) => void;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_start: () => void;
 }
 
