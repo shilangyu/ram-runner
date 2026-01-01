@@ -1,7 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-export function run_program(program: string, initial_registers: any): string;
+
 export function format(program: string): string;
+
+export function run_program(program: string, initial_registers: any): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -20,6 +22,7 @@ export interface InitOutput {
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;
+
 /**
 * Instantiates the given `module`, which can either be bytes or
 * a precompiled `WebAssembly.Module`.
